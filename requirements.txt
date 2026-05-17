@@ -1,9 +1,9 @@
 streamlit
 pandas
 google-play-scraper
-textblob
 plotly
-wordcloud
+textblob
 matplotlib
-numpy
+wordcloud
 seaborn
+numpy
