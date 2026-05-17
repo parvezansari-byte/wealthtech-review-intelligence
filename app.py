@@ -154,6 +154,34 @@ st.plotly_chart(
     fig_pie,
     use_container_width=True
 )
+# AI INSIGHTS
+st.subheader("🧠 AI Executive Insights")
+
+# BEST RATING
+best_rating = summary.loc[
+    summary["Avg Rating"].idxmax()
+]
+
+# BEST SENTIMENT
+best_sentiment = summary.loc[
+    summary["Positive %"].idxmax()
+]
+
+# MOST COMPLAINTS
+top_issue = issue_counts.iloc[0]
+
+st.info(
+    f"""
+    📈 {best_rating['Platform']} has the highest average rating of {round(best_rating['Avg Rating'],2)}.
+
+    😊 {best_sentiment['Platform']} shows the strongest positive sentiment at {best_sentiment['Positive %']}%.
+
+    🚨 Most common complaint category across platforms:
+    {top_issue['Issue Type']} ({top_issue['Count']} mentions).
+
+    💡 Platforms with stronger UX and stability are generating significantly higher user satisfaction.
+    """
+)
 # ISSUE ANALYSIS
 st.subheader("🚨 Complaint Intelligence")
 
