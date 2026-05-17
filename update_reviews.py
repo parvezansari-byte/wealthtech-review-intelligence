@@ -88,17 +88,20 @@ for app_name, app_id in apps.items():
 
             all_reviews.append({
 
-                "platform": app_name,
+    "platform": app_name,
 
-                "review": r.get("content", ""),
+    "reviewer_name": r.get("userName", "Anonymous"),
 
-                "rating": r.get("score", 0),
+    "review": r.get("content", ""),
 
-                "review_date": r.get("at", ""),
+    "rating": r.get("score", 0),
 
-                "scraped_at": datetime.now()
+    "likes": r.get("thumbsUpCount", 0),
 
-            })
+    "review_date": r.get("at", ""),
+
+    "scraped_at": datetime.now()
+})
 
     except Exception as e:
 
