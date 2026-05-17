@@ -36,6 +36,216 @@ except Exception as e:
     st.error(f"Data Load Error: {e}")
 
     st.stop()
+    # ---------------------------------------------------
+# DATE CONVERSION
+# ---------------------------------------------------
+
+df["review_date"] = pd.to_datetime(
+    df["review_date"],
+    errors="coerce"
+)
+
+# ---------------------------------------------------
+# TIME FEATURES
+# ---------------------------------------------------
+
+df["Year"] = df["review_date"].dt.year
+
+df["Month"] = df["review_date"].dt.strftime("%B")
+
+df["Week"] = df["review_date"].dt.isocalendar().week
+
+# ---------------------------------------------------
+# ANALYTICS HEADER
+# ---------------------------------------------------
+
+st.markdown("## 📈 Review Trend Intelligence")
+
+# ---------------------------------------------------
+# YEARLY ANALYTICS
+# ---------------------------------------------------
+
+yearly_reviews = (
+
+    df.groupby("Year")
+
+    .size()
+
+    .reset_index(name="Total Reviews")
+
+)
+
+st.markdown("### 📅 Year-wise Reviews")
+
+fig_year = px.bar(
+
+    yearly_reviews,
+
+    x="Year",
+
+    y="Total Reviews",
+
+    text="Total Reviews",
+
+    title="Year-wise Review Volume"
+
+)
+
+st.plotly_chart(
+    fig_year,
+    use_container_width=True
+)
+
+# ---------------------------------------------------
+# MONTHLY ANALYTICS
+# ---------------------------------------------------
+
+monthly_reviews = (
+
+    df.groupby("Month")
+
+    .size()
+
+    .reset_index(name="Total Reviews")
+
+)
+
+month_order = [
+
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+
+]
+
+monthly_reviews["Month"] = pd.Categorical(
+
+    monthly_reviews["Month"],
+
+    categories=month_order,
+
+    ordered=True
+
+)
+
+monthly_reviews = monthly_reviews.sort_values(
+    "Month"
+)
+
+st.markdown("### 📆 Month-wise Reviews")
+
+fig_month = px.line(
+
+    monthly_reviews,
+
+    x="Month",
+
+    y="Total Reviews",
+
+    markers=True,
+
+    title="Monthly Review Momentum"
+
+)
+
+st.plotly_chart(
+    fig_month,
+    use_container_width=True
+)
+
+# ---------------------------------------------------
+# WEEKLY ANALYTICS
+# ---------------------------------------------------
+
+weekly_reviews = (
+
+    df.groupby("Week")
+
+    .size()
+
+    .reset_index(name="Total Reviews")
+
+)
+
+st.markdown("### 🗓️ Week-wise Reviews")
+
+fig_week = px.area(
+
+    weekly_reviews,
+
+    x="Week",
+
+    y="Total Reviews",
+
+    title="Weekly Review Activity"
+
+)
+
+st.plotly_chart(
+    fig_week,
+    use_container_width=True
+)
+
+# ---------------------------------------------------
+# OVERALL PLATFORM TABLE
+# ---------------------------------------------------
+
+st.markdown("## 🌍 Overall Platform Intelligence")
+
+overall_table = (
+
+    df.groupby("platform")
+
+    .agg({
+
+        "review": "count",
+
+        "rating": "mean",
+
+        "likes": "sum"
+
+    })
+
+    .reset_index()
+
+)
+
+overall_table.columns = [
+
+    "Platform",
+
+    "Total Reviews",
+
+    "Average Rating",
+
+    "Total Likes"
+
+]
+
+overall_table["Average Rating"] = (
+
+    overall_table["Average Rating"]
+
+    .round(2)
+
+)
+
+st.dataframe(
+
+    overall_table,
+
+    use_container_width=True
+
+)
 
 # ---------------------------------------------------
 # EMPTY CHECK
