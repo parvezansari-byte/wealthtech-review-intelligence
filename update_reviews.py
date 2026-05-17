@@ -9,11 +9,11 @@ import os
 
 apps = {
 
-    "NJ Partner Desk":
-        "com.fin.mpartnerdesk",
-
     "Prudent":
         "com.prumob.mobileapp",
+
+    "NJ Partner Desk":
+        "com.fin.mpartnerdesk",
 
     "AssetPlus":
         "in.assetplus.partner",
@@ -38,41 +38,18 @@ apps = {
 }
 
 # ---------------------------------------------------
-# CREATE DATA FOLDER
-# ---------------------------------------------------
-
-os.makedirs(
-    "data",
-    exist_ok=True
-)
-
-# ---------------------------------------------------
-# LOAD OLD DATA
-# ---------------------------------------------------
-
-csv_path = "data/historical_reviews.csv"
-
-if os.path.exists(csv_path):
-
-    old_df = pd.read_csv(csv_path)
-
-else:
-
-    old_df = pd.DataFrame()
-
-# ---------------------------------------------------
-# NEW DATA STORAGE
+# STORAGE
 # ---------------------------------------------------
 
 all_reviews = []
 
 # ---------------------------------------------------
-# SCRAPE REVIEWS
+# FETCH REVIEWS
 # ---------------------------------------------------
 
 for app_name, app_id in apps.items():
 
-    print(f"Fetching reviews for {app_name}")
+    print(f"Fetching {app_name}")
 
     try:
 
@@ -84,7 +61,7 @@ for app_name, app_id in apps.items():
 
             country="in",
 
-            count=500
+            count=200
 
         )
 
@@ -92,7 +69,8 @@ for app_name, app_id in apps.items():
 
             all_reviews.append({
 
-                "platform": app_name,
+                "platform":
+                    app_name,
 
                 "reviewer_name":
                     r.get("userName", "Anonymous"),
@@ -116,58 +94,29 @@ for app_name, app_id in apps.items():
 
     except Exception as e:
 
-        print(
-            f"Error scraping {app_name}: {e}"
-        )
+        print(f"Error: {e}")
 
 # ---------------------------------------------------
-# CREATE NEW DATAFRAME
+# CREATE DATAFRAME
 # ---------------------------------------------------
 
-new_df = pd.DataFrame(all_reviews)
+df = pd.DataFrame(all_reviews)
 
 # ---------------------------------------------------
-# COMBINE OLD + NEW
+# CREATE FOLDER
 # ---------------------------------------------------
 
-combined_df = pd.concat(
-    [old_df, new_df],
-    ignore_index=True
-)
-
-# ---------------------------------------------------
-# REMOVE DUPLICATES
-# ---------------------------------------------------
-
-combined_df = combined_df.drop_duplicates(
-
-    subset=[
-        "platform",
-        "reviewer_name",
-        "review"
-    ]
-)
-
-# ---------------------------------------------------
-# DATE CLEANUP
-# ---------------------------------------------------
-
-combined_df["review_date"] = pd.to_datetime(
-    combined_df["review_date"],
-    errors="coerce"
-)
-
-combined_df["scraped_at"] = pd.to_datetime(
-    combined_df["scraped_at"],
-    errors="coerce"
+os.makedirs(
+    "data",
+    exist_ok=True
 )
 
 # ---------------------------------------------------
 # SAVE CSV
 # ---------------------------------------------------
 
-combined_df.to_csv(
-    csv_path,
+df.to_csv(
+    "data/historical_reviews.csv",
     index=False
 )
 
@@ -175,10 +124,8 @@ combined_df.to_csv(
 # SUCCESS
 # ---------------------------------------------------
 
-print(
-    f"Dataset updated successfully."
-)
+print(df.head())
 
 print(
-    f"Total Lifetime Reviews: {len(combined_df)}"
+    f"Total Reviews Saved: {len(df)}"
 )
