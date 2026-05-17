@@ -1,31 +1,7 @@
-import os
+from google_play_scraper import reviews
 import pandas as pd
-
 from datetime import datetime
-
-from google_play_scraper import reviews, Sort
-
-# ---------------------------------------------------
-# CREATE FOLDERS
-# ---------------------------------------------------
-
-os.makedirs("data/daily", exist_ok=True)
-
-os.makedirs("data/monthly", exist_ok=True)
-
-# ---------------------------------------------------
-# DATE VARIABLES
-# ---------------------------------------------------
-
-today = datetime.now()
-
-daily_file = today.strftime(
-    "data/daily/reviews_%Y_%m_%d.csv"
-)
-
-monthly_file = today.strftime(
-    "data/monthly/reviews_%Y_%m.csv"
-)
+import os
 
 # ---------------------------------------------------
 # APPS
@@ -33,171 +9,176 @@ monthly_file = today.strftime(
 
 apps = {
 
-    "NJ Partner Desk": "com.fin.mpartnerdesk",
+    "NJ Partner Desk":
+        "com.fin.mpartnerdesk",
 
-    "Prudent": "com.prumob.mobileapp",
+    "Prudent":
+        "com.prumob.mobileapp",
 
-    "AssetPlus": "in.assetplus.partner",
+    "AssetPlus":
+        "in.assetplus.partner",
 
-    "Wealthy Partner": "in.wealthy.android.advisor",
+    "Wealthy Partner":
+        "in.wealthy.android.advisor",
 
-    "Nuvama": "com.Edelweiss.FPD.edelweiss_subbroker_app",
+    "Nuvama":
+        "com.Edelweiss.FPD.edelweiss_subbroker_app",
 
-    "ZFunds Experts": "com.zfunds.experts",
+    "ZFunds":
+        "com.zfunds.experts",
 
-    "FundsIndia Partner": "com.fundsindia.partnerapp",
+    "FundsIndia Partner":
+        "com.fundsindia.partnerapp",
 
-    "Centricity": "com.centricity_app",
+    "Centricity":
+        "com.centricity_app",
 
-    "Bonanza": "com.bonanzabranch.BranchMbos",
-
-    "Groww": "com.nextbillion.groww",
-
-    "Angel One": "com.msf.angelmobile",
-
-    "Zerodha": "com.zerodha.kite3",
-
-    "Upstox": "in.upstox.pro"
+    "Bonanza":
+        "com.bonanzabranch.BranchMbos"
 }
 
 # ---------------------------------------------------
-# STORAGE
+# CREATE DATA FOLDER
+# ---------------------------------------------------
+
+os.makedirs(
+    "data",
+    exist_ok=True
+)
+
+# ---------------------------------------------------
+# LOAD OLD DATA
+# ---------------------------------------------------
+
+csv_path = "data/historical_reviews.csv"
+
+if os.path.exists(csv_path):
+
+    old_df = pd.read_csv(csv_path)
+
+else:
+
+    old_df = pd.DataFrame()
+
+# ---------------------------------------------------
+# NEW DATA STORAGE
 # ---------------------------------------------------
 
 all_reviews = []
 
 # ---------------------------------------------------
-# FETCH REVIEWS
+# SCRAPE REVIEWS
 # ---------------------------------------------------
 
 for app_name, app_id in apps.items():
 
+    print(f"Fetching reviews for {app_name}")
+
     try:
 
         result, _ = reviews(
-            app_id,
-            lang="en",
-            country="in",
-            sort=Sort.NEWEST,
-            count=200
-        )
 
-        print(f"{app_name}: {len(result)} reviews fetched")
+            app_id,
+
+            lang="en",
+
+            country="in",
+
+            count=500
+
+        )
 
         for r in result:
 
             all_reviews.append({
 
-    "platform": app_name,
+                "platform": app_name,
 
-    "reviewer_name": r.get("userName", "Anonymous"),
+                "reviewer_name":
+                    r.get("userName", "Anonymous"),
 
-    "review": r.get("content", ""),
+                "review":
+                    r.get("content", ""),
 
-    "rating": r.get("score", 0),
+                "rating":
+                    r.get("score", 0),
 
-    "likes": r.get("thumbsUpCount", 0),
+                "likes":
+                    r.get("thumbsUpCount", 0),
 
-    "review_date": r.get("at", ""),
+                "review_date":
+                    r.get("at"),
 
-    "scraped_at": datetime.now()
-})
+                "scraped_at":
+                    datetime.now()
+
+            })
 
     except Exception as e:
 
-        print(f"ERROR in {app_name}: {e}")
-
-# ---------------------------------------------------
-# DATAFRAME
-# ---------------------------------------------------
-
-reviews_df = pd.DataFrame(all_reviews)
-
-# ---------------------------------------------------
-# EMPTY CHECK
-# ---------------------------------------------------
-
-if reviews_df.empty:
-
-    print("No reviews fetched.")
-
-else:
-
-    # ---------------------------------------------------
-    # REMOVE DUPLICATES
-    # ---------------------------------------------------
-
-    reviews_df = reviews_df.drop_duplicates(
-        subset=["platform", "review"]
-    )
-
-    # ---------------------------------------------------
-    # SAVE LATEST
-    # ---------------------------------------------------
-
-    reviews_df.to_csv(
-        "data/latest_reviews.csv",
-        index=False
-    )
-
-    # ---------------------------------------------------
-    # DAILY SNAPSHOT
-    # ---------------------------------------------------
-
-    reviews_df.to_csv(
-        daily_file,
-        index=False
-    )
-
-    # ---------------------------------------------------
-    # MONTHLY SNAPSHOT
-    # ---------------------------------------------------
-
-    reviews_df.to_csv(
-        monthly_file,
-        index=False
-    )
-
-    # ---------------------------------------------------
-    # HISTORICAL DATABASE
-    # ---------------------------------------------------
-
-    historical_path = (
-        "data/historical_reviews.csv"
-    )
-
-    if os.path.exists(historical_path):
-
-        historical_df = pd.read_csv(
-            historical_path
+        print(
+            f"Error scraping {app_name}: {e}"
         )
 
-        combined_df = pd.concat([
-            historical_df,
-            reviews_df
-        ])
+# ---------------------------------------------------
+# CREATE NEW DATAFRAME
+# ---------------------------------------------------
 
-        combined_df = combined_df.drop_duplicates(
-            subset=["platform", "review"]
-        )
+new_df = pd.DataFrame(all_reviews)
 
-    else:
+# ---------------------------------------------------
+# COMBINE OLD + NEW
+# ---------------------------------------------------
 
-        combined_df = reviews_df
+combined_df = pd.concat(
+    [old_df, new_df],
+    ignore_index=True
+)
 
-    combined_df.to_csv(
-        historical_path,
-        index=False
-    )
+# ---------------------------------------------------
+# REMOVE DUPLICATES
+# ---------------------------------------------------
 
-    # ---------------------------------------------------
-    # STATUS
-    # ---------------------------------------------------
+combined_df = combined_df.drop_duplicates(
 
-    print("Latest reviews updated.")
+    subset=[
+        "platform",
+        "reviewer_name",
+        "review"
+    ]
+)
 
-    print("Daily snapshot created.")
+# ---------------------------------------------------
+# DATE CLEANUP
+# ---------------------------------------------------
 
-    print("Monthly snapshot created.")
+combined_df["review_date"] = pd.to_datetime(
+    combined_df["review_date"],
+    errors="coerce"
+)
 
-    print("Historical database updated.")
+combined_df["scraped_at"] = pd.to_datetime(
+    combined_df["scraped_at"],
+    errors="coerce"
+)
+
+# ---------------------------------------------------
+# SAVE CSV
+# ---------------------------------------------------
+
+combined_df.to_csv(
+    csv_path,
+    index=False
+)
+
+# ---------------------------------------------------
+# SUCCESS
+# ---------------------------------------------------
+
+print(
+    f"Dataset updated successfully."
+)
+
+print(
+    f"Total Lifetime Reviews: {len(combined_df)}"
+)
