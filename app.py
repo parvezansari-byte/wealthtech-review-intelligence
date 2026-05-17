@@ -12,8 +12,11 @@ st.set_page_config(
 st.title("WealthTech Review Intelligence Dashboard")
 
 apps = {
-    "NJ Wealth": "com.njindia.finwizard",
-    "FundsIndia": "com.fundsindia.consumer"
+    "NJ Wealth": "com.nj.ewa",
+    "FundsIndia": "com.fundsindia.consumer",
+    "Nuvama": "com.msf.nuvama",
+    "AssetPlus": "com.assetplus.app",
+    "Wealthy": "in.wealthy.app"
 }
 
 selected = st.selectbox(
