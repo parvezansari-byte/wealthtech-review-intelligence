@@ -7,3 +7,5 @@ matplotlib
 wordcloud
 seaborn
 numpy
+reportlab
+python-pptx
