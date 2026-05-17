@@ -3,97 +3,59 @@ import random
 from datetime import datetime, timedelta
 
 # ---------------------------------------------------
-# PLATFORMS
+# SETTINGS
 # ---------------------------------------------------
+
+TOTAL_REVIEWS = 5000
 
 platforms = [
 
     "Prudent",
-
     "NJ Partner Desk",
-
     "AssetPlus",
-
     "Wealthy Partner",
-
     "Nuvama",
-
     "ZFunds",
-
     "FundsIndia Partner",
-
     "Centricity",
-
     "Bonanza"
-]
 
-# ---------------------------------------------------
-# REVIEW COMMENTS
-# ---------------------------------------------------
+]
 
 positive_reviews = [
 
     "Excellent onboarding experience",
-
-    "Very smooth advisor workflow",
-
-    "Great investment platform",
-
-    "Amazing app for MFD business",
-
-    "Fast and reliable platform",
-
-    "Excellent UI and usability",
-
-    "Very useful for advisors",
-
-    "Easy SIP management",
-
-    "Best WealthTech platform"
+    "Smooth investment journey",
+    "Amazing advisor platform",
+    "Best wealth management app",
+    "Easy SIP process",
+    "Very useful dashboard",
+    "Fast and reliable app",
+    "Great UI and workflow"
 
 ]
 
 negative_reviews = [
 
+    "Login issue occurs",
     "App crashes frequently",
-
-    "Login issue happens often",
-
     "Slow performance",
-
-    "KYC process is difficult",
-
-    "Customer support is poor",
-
+    "KYC issue happens",
+    "Poor customer support",
     "OTP verification problem",
-
-    "App hangs sometimes",
-
-    "Needs UI improvement",
-
-    "Technical glitches occur"
+    "Technical glitches found"
 
 ]
 
 neutral_reviews = [
 
-    "Average experience overall",
-
+    "Average platform experience",
     "Features are decent",
-
-    "Can improve performance",
-
-    "UI is acceptable",
-
-    "Moderate experience",
-
-    "Works fine mostly"
+    "Can improve UI",
+    "Moderate usability",
+    "Good but needs updates"
 
 ]
-
-# ---------------------------------------------------
-# NAMES
-# ---------------------------------------------------
 
 names = [
 
@@ -106,29 +68,33 @@ names = [
     "Karan",
     "Anjali",
     "Rohit",
-    "Meera"
+    "Meera",
+    "Divya",
+    "Pooja",
+    "Simran",
+    "Sachin",
+    "Ravi"
+
 ]
 
 # ---------------------------------------------------
-# DATA STORAGE
+# GENERATE DATA
 # ---------------------------------------------------
 
 rows = []
 
-# ---------------------------------------------------
-# GENERATE 2000 REVIEWS
-# ---------------------------------------------------
-
-for i in range(2000):
+for i in range(TOTAL_REVIEWS):
 
     platform = random.choice(platforms)
 
     sentiment = random.choice([
+
         "positive",
         "positive",
         "positive",
         "neutral",
         "negative"
+
     ])
 
     if sentiment == "positive":
@@ -155,11 +121,14 @@ for i in range(2000):
 
         rating = 3
 
-    random_days = random.randint(0, 180)
+    random_days = random.randint(0, 365)
 
     review_date = (
+
         datetime.now()
+
         - timedelta(days=random_days)
+
     )
 
     rows.append({
@@ -177,7 +146,7 @@ for i in range(2000):
             rating,
 
         "likes":
-            random.randint(0, 25),
+            random.randint(0, 50),
 
         "review_date":
             review_date,
@@ -188,7 +157,7 @@ for i in range(2000):
     })
 
 # ---------------------------------------------------
-# CREATE DATAFRAME
+# DATAFRAME
 # ---------------------------------------------------
 
 df = pd.DataFrame(rows)
@@ -210,5 +179,7 @@ df.to_csv(
 # ---------------------------------------------------
 
 print(
-    f"Generated {len(df)} reviews successfully."
+
+    f"{len(df)} reviews generated successfully."
+
 )
