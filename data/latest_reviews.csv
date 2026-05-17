@@ -1,1 +1,0 @@
-pd.read_csv("data/latest_reviews.csv")
