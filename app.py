@@ -164,6 +164,41 @@ for platform in summary["Platform"]:
     positive_scores.append(positive_pct)
 
 summary["Positive %"] = positive_scores
+# ---------------------------------------------------
+# OVERALL PLATFORM SCORE
+# ---------------------------------------------------
+
+# NORMALIZED REVIEW SCORE
+
+max_reviews = (
+    summary["Total Reviews"].max()
+)
+
+summary["Review Score"] = (
+    summary["Total Reviews"] / max_reviews
+) * 5
+
+# FINAL WEIGHTED SCORE
+
+summary["Overall Score"] = (
+
+    summary["Avg Rating"] * 0.7 +
+
+    summary["Review Score"] * 0.3
+
+)
+
+summary["Overall Score"] = (
+    summary["Overall Score"]
+    .round(2)
+)
+
+# SORTING
+
+summary = summary.sort_values(
+    by="Overall Score",
+    ascending=False
+)
 
 # ---------------------------------------------------
 # KPI METRICS
