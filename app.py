@@ -35,12 +35,20 @@ st.markdown(
 # -----------------------------------
 
 apps = {
+    "NJ Partner Desk": "com.fin.mpartnerdesk",
+    "Prudent": "com.prumob.mobileapp",
+    "AssetPlus": "in.assetplus.partner",
+    "Wealthy Partner": "in.wealthy.android.advisor",
+    "Nuvama": "com.Edelweiss.FPD.edelweiss_subbroker_app",
+    "ZFunds Experts": "com.zfunds.experts",
+    "FundsIndia Partner": "com.fundsindia.partnerapp",
+    "Centricity": "com.centricity_app",
+    "Bonanza Branch": "com.bonanzabranch.BranchMbos",
     "Groww": "com.nextbillion.groww",
     "Angel One": "com.msf.angelmobile",
     "Zerodha": "com.zerodha.kite3",
     "Upstox": "in.upstox.pro"
 }
-
 # -----------------------------------
 # SIDEBAR
 # -----------------------------------
