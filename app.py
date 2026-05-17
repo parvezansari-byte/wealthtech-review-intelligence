@@ -21,10 +21,10 @@ st.title("📊 WealthTech Review Intelligence Dashboard")
 st.sidebar.header("Platform Selection")
 
 apps = {
-    "NJ Wealth": "com.nj.ewa",
-    "FundsIndia": "com.fundsindia.consumer",
-    "AssetPlus": "com.assetplus.app",
-    "Wealthy": "in.wealthy.app"
+    "Groww": "com.nextbillion.groww",
+    "Angel One": "com.msf.angelmobile",
+    "Zerodha": "com.zerodha.kite3",
+    "Upstox": "in.upstox.pro"
 }
 
 selected = st.sidebar.selectbox(
