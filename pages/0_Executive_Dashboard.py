@@ -110,6 +110,139 @@ col4.metric(
 )
 
 st.divider()
+# ---------------------------------------------------
+# OVERALL MARKET INTELLIGENCE
+# ---------------------------------------------------
+
+st.subheader("🌎 Overall WealthTech Market Intelligence")
+
+# POSITIVE / NEGATIVE SPLIT
+
+positive_reviews = len(
+    df[df["rating"] >= 4]
+)
+
+negative_reviews = len(
+    df[df["rating"] <= 2]
+)
+
+neutral_reviews = len(
+    df[df["rating"] == 3]
+)
+
+# SENTIMENT SCORE
+
+overall_sentiment = round(
+
+    (
+        positive_reviews
+        /
+        len(df)
+    ) * 100,
+
+    2
+)
+
+# COMPLAINT RATIO
+
+complaint_ratio = round(
+
+    (
+        negative_reviews
+        /
+        len(df)
+    ) * 100,
+
+    2
+)
+
+# KPI CARDS
+
+m1, m2, m3, m4 = st.columns(4)
+
+m1.metric(
+    "😊 Positive Reviews",
+    positive_reviews
+)
+
+m2.metric(
+    "😐 Neutral Reviews",
+    neutral_reviews
+)
+
+m3.metric(
+    "😡 Negative Reviews",
+    negative_reviews
+)
+
+m4.metric(
+    "📈 Market Sentiment",
+    f"{overall_sentiment}%"
+)
+
+# ---------------------------------------------------
+# OVERALL REVIEW DISTRIBUTION
+# ---------------------------------------------------
+
+review_distribution = pd.DataFrame({
+
+    "Category": [
+        "Positive",
+        "Neutral",
+        "Negative"
+    ],
+
+    "Count": [
+        positive_reviews,
+        neutral_reviews,
+        negative_reviews
+    ]
+})
+
+fig_distribution = px.pie(
+
+    review_distribution,
+
+    names="Category",
+
+    values="Count",
+
+    title="Overall WealthTech Sentiment Distribution"
+
+)
+
+st.plotly_chart(
+    fig_distribution,
+    use_container_width=True
+)
+
+# ---------------------------------------------------
+# EXECUTIVE MARKET COMMENTARY
+# ---------------------------------------------------
+
+st.subheader("🧠 Overall Market Commentary")
+
+st.info(
+    f"""
+📈 Overall WealthTech market sentiment currently stands at {overall_sentiment}% positive.
+
+🚨 Complaint ratio across platforms is approximately {complaint_ratio}% indicating the level of operational friction in the ecosystem.
+
+💡 Platforms with:
+- faster onboarding
+- stable infrastructure
+- simpler advisor workflows
+- lower friction UX
+
+continue to outperform traditional systems.
+
+🏦 The WealthTech ecosystem is increasingly transitioning toward:
+- advisor operating systems
+- automation-first engagement
+- AI-assisted workflows
+- mobile-native infrastructure
+"""
+)
 
 # ---------------------------------------------------
 # TOP LEADERBOARD
