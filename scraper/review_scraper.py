@@ -3,21 +3,35 @@ import pandas as pd
 
 def fetch_reviews(app_id, count=100):
 
-    result, _ = reviews(
-        app_id,
-        lang='en',
-        country='in',
-        sort=Sort.NEWEST,
-        count=count
-    )
+    try:
 
-    data = []
+        result, continuation_token = reviews(
+            app_id,
+            lang="en",
+            country="in",
+            sort=Sort.NEWEST,
+            count=count
+        )
 
-    for r in result:
-        data.append({
-            "review": r['content'],
-            "rating": r['score'],
-            "date": r['at']
-        })
+        if not result:
+            return pd.DataFrame()
 
-    return pd.DataFrame(data)
+        data = []
+
+        for r in result:
+
+            data.append({
+                "review": r.get("content", ""),
+                "rating": r.get("score", 0),
+                "date": r.get("at", "")
+            })
+
+        df = pd.DataFrame(data)
+
+        return df
+
+    except Exception as e:
+
+        print("SCRAPER ERROR:", e)
+
+        return pd.DataFrame()
