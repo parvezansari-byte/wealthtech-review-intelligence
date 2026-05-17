@@ -4,6 +4,7 @@ import plotly.express as px
 
 from scraper.review_scraper import fetch_reviews
 from analytics.sentiment import analyze_sentiment
+from analytics.complaints import detect_issue
 
 # PAGE CONFIG
 st.set_page_config(
@@ -41,10 +42,16 @@ for app_name in selected:
         df["Platform"] = app_name
 
         df["sentiment"] = (
-            df["review"]
-            .astype(str)
-            .apply(analyze_sentiment)
-        )
+    df["review"]
+    .astype(str)
+    .apply(analyze_sentiment)
+)
+
+df["issue_type"] = (
+    df["review"]
+    .astype(str)
+    .apply(detect_issue)
+)
 
         all_data.append(df)
 
@@ -145,6 +152,32 @@ fig_pie = px.pie(
 
 st.plotly_chart(
     fig_pie,
+    use_container_width=True
+)
+# ISSUE ANALYSIS
+st.subheader("🚨 Complaint Intelligence")
+
+issue_counts = (
+    final_df["issue_type"]
+    .value_counts()
+    .reset_index()
+)
+
+issue_counts.columns = [
+    "Issue Type",
+    "Count"
+]
+
+fig_issue = px.bar(
+    issue_counts,
+    x="Issue Type",
+    y="Count",
+    title="Most Common Complaints",
+    text_auto=True
+)
+
+st.plotly_chart(
+    fig_issue,
     use_container_width=True
 )
 
