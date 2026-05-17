@@ -1,21 +1,32 @@
 platform,reviewer_name,review,rating,likes,review_date,scraped_at
-Prudent,Rahul,Great onboarding and smooth experience,5,10,2026-05-17,2026-05-17
-Prudent,Amit,Login issue sometimes,2,4,2026-05-17,2026-05-17
-AssetPlus,Karan,Very useful for advisors,5,8,2026-05-17,2026-05-17
-AssetPlus,Rohit,App crashes occasionally,3,2,2026-05-17,2026-05-17
-Wealthy Partner,Sneha,Excellent platform for MFDs,5,9,2026-05-17,2026-05-17
-Nuvama,Anjali,Good interface and workflow,4,5,2026-05-17,2026-05-17
-NJ Partner Desk,Vikas,UI needs improvement,3,1,2026-05-17,2026-05-17
-FundsIndia Partner,Priya,Smooth investment journey,5,7,2026-05-17,2026-05-17
-ZFunds,Arjun,Slow performance at times,2,3,2026-05-17,2026-05-17
-Centricity,Meera,Helpful support team,4,6,2026-05-17,2026-05-17
-Bonanza,Raj,Good overall trading support,4,5,2026-05-17,2026-05-17
-Prudent,Ravi,Excellent app for advisors,5,9,2026-05-17,2026-05-17
-AssetPlus,Neha,Fast onboarding process,5,6,2026-05-17,2026-05-17
-Nuvama,Kunal,Good UI and dashboard,4,4,2026-05-17,2026-05-17
-Wealthy Partner,Simran,Very stable platform,5,8,2026-05-17,2026-05-17
-NJ Partner Desk,Aakash,Performance can improve,3,2,2026-05-17,2026-05-17
-FundsIndia Partner,Divya,Very smooth SIP flow,5,5,2026-05-17,2026-05-17
-ZFunds,Manoj,OTP issue occurs sometimes,2,1,2026-05-17,2026-05-17
-Centricity,Pooja,Support team is responsive,4,7,2026-05-17,2026-05-17
-Bonanza,Sachin,Good overall experience,4,3,2026-05-17,2026-05-17
+Prudent,Rahul,Excellent onboarding process,5,10,2025-01-10,2025-01-10
+Prudent,Amit,Login issue sometimes,2,4,2025-01-11,2025-01-11
+AssetPlus,Karan,Very useful platform,5,8,2025-01-12,2025-01-12
+AssetPlus,Rohit,App crashes occasionally,3,2,2025-01-13,2025-01-13
+Wealthy Partner,Sneha,Excellent advisor experience,5,9,2025-01-14,2025-01-14
+Nuvama,Anjali,Good workflow and UI,4,5,2025-01-15,2025-01-15
+NJ Partner Desk,Vikas,UI needs improvement,3,1,2025-01-16,2025-01-16
+FundsIndia Partner,Priya,Smooth investment journey,5,7,2025-01-17,2025-01-17
+ZFunds,Arjun,Slow performance issue,2,3,2025-01-18,2025-01-18
+Centricity,Meera,Helpful support team,4,6,2025-01-19,2025-01-19
+Bonanza,Raj,Good trading support,4,5,2025-01-20,2025-01-20
+Prudent,Ravi,Fast onboarding and KYC,5,9,2025-02-01,2025-02-01
+AssetPlus,Neha,SIP process is smooth,5,6,2025-02-02,2025-02-02
+Nuvama,Kunal,Dashboard is useful,4,4,2025-02-03,2025-02-03
+Wealthy Partner,Simran,Very stable application,5,8,2025-02-04,2025-02-04
+NJ Partner Desk,Aakash,Performance can improve,3,2,2025-02-05,2025-02-05
+FundsIndia Partner,Divya,Very smooth platform,5,5,2025-02-06,2025-02-06
+ZFunds,Manoj,OTP issue sometimes,2,1,2025-02-07,2025-02-07
+Centricity,Pooja,Support is responsive,4,7,2025-02-08,2025-02-08
+Bonanza,Sachin,Good overall experience,4,3,2025-02-09,2025-02-09
+Prudent,Rahul,Excellent onboarding process,5,10,2025-03-10,2025-03-10
+Prudent,Amit,Login issue sometimes,2,4,2025-03-11,2025-03-11
+AssetPlus,Karan,Very useful platform,5,8,2025-03-12,2025-03-12
+AssetPlus,Rohit,App crashes occasionally,3,2,2025-03-13,2025-03-13
+Wealthy Partner,Sneha,Excellent advisor experience,5,9,2025-03-14,2025-03-14
+Nuvama,Anjali,Good workflow and UI,4,5,2025-03-15,2025-03-15
+NJ Partner Desk,Vikas,UI needs improvement,3,1,2025-03-16,2025-03-16
+FundsIndia Partner,Priya,Smooth investment journey,5,7,2025-03-17,2025-03-17
+ZFunds,Arjun,Slow performance issue,2,3,2025-03-18,2025-03-18
+Centricity,Meera,Helpful support team,4,6,2025-03-19,2025-03-19
+Bonanza,Raj,Good trading support,4,5,2025-03-20,2025-03-20
