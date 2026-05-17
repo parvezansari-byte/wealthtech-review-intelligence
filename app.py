@@ -1,21 +1,39 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import matplotlib.pyplot as plt
+
+from wordcloud import WordCloud
 
 from scraper.review_scraper import fetch_reviews
 from analytics.sentiment import analyze_sentiment
 from analytics.complaints import detect_issue
 
+# -----------------------------------
 # PAGE CONFIG
+# -----------------------------------
+
 st.set_page_config(
     page_title="WealthTech Intelligence Platform",
     layout="wide"
 )
 
+# -----------------------------------
 # TITLE
-st.title("🚀 WealthTech Competitive Intelligence Dashboard")
+# -----------------------------------
 
-# APPS
+st.title("🚀 WealthTech Review Intelligence Dashboard")
+
+st.markdown(
+    """
+    AI-powered Play Store sentiment and competitor intelligence platform.
+    """
+)
+
+# -----------------------------------
+# PLATFORM LIST
+# -----------------------------------
+
 apps = {
     "Groww": "com.nextbillion.groww",
     "Angel One": "com.msf.angelmobile",
@@ -23,30 +41,41 @@ apps = {
     "Upstox": "in.upstox.pro"
 }
 
+# -----------------------------------
 # SIDEBAR
+# -----------------------------------
+
+st.sidebar.header("📱 Platform Selection")
+
 selected = st.sidebar.multiselect(
-    "Select Platforms",
+    "Choose Platforms",
     list(apps.keys()),
     default=list(apps.keys())
 )
 
+# -----------------------------------
+# FETCH DATA
+# -----------------------------------
+
 all_data = []
 
-# FETCH DATA
 for app_name in selected:
 
     df = fetch_reviews(apps[app_name])
 
     if not df.empty:
 
+        # Platform Name
         df["Platform"] = app_name
 
+        # Sentiment
         df["sentiment"] = (
             df["review"]
             .astype(str)
             .apply(analyze_sentiment)
         )
 
+        # Complaint Detection
         df["issue_type"] = (
             df["review"]
             .astype(str)
@@ -55,15 +84,26 @@ for app_name in selected:
 
         all_data.append(df)
 
+# -----------------------------------
 # CHECK DATA
+# -----------------------------------
+
 if len(all_data) == 0:
-    st.error("No review data found.")
+
+    st.error("❌ No review data found.")
+
     st.stop()
 
-# MERGE
+# -----------------------------------
+# MERGE DATA
+# -----------------------------------
+
 final_df = pd.concat(all_data)
 
-# KPI TABLE
+# -----------------------------------
+# SUMMARY TABLE
+# -----------------------------------
+
 summary = (
     final_df
     .groupby("Platform")
@@ -80,7 +120,10 @@ summary.columns = [
     "Total Reviews"
 ]
 
-# SENTIMENT %
+# -----------------------------------
+# POSITIVE %
+# -----------------------------------
+
 positive_scores = []
 
 for platform in summary["Platform"]:
@@ -98,17 +141,49 @@ for platform in summary["Platform"]:
 
 summary["Positive %"] = positive_scores
 
-# SHOW TABLE
+# -----------------------------------
+# KPI METRICS
+# -----------------------------------
+
+col1, col2, col3 = st.columns(3)
+
+col1.metric(
+    "📱 Platforms Analysed",
+    len(summary)
+)
+
+col2.metric(
+    "📝 Total Reviews",
+    len(final_df)
+)
+
+col3.metric(
+    "⭐ Average Market Rating",
+    round(summary["Avg Rating"].mean(), 2)
+)
+
+st.divider()
+
+# -----------------------------------
+# LEADERBOARD
+# -----------------------------------
+
 st.subheader("🏆 Platform Leaderboard")
 
-st.dataframe(summary)
+st.dataframe(
+    summary,
+    use_container_width=True
+)
 
+# -----------------------------------
 # RATING COMPARISON
+# -----------------------------------
+
 fig_rating = px.bar(
     summary,
     x="Platform",
     y="Avg Rating",
-    title="Average Rating Comparison",
+    title="⭐ Average Rating Comparison",
     text_auto=True
 )
 
@@ -117,12 +192,15 @@ st.plotly_chart(
     use_container_width=True
 )
 
+# -----------------------------------
 # POSITIVE SENTIMENT
+# -----------------------------------
+
 fig_sentiment = px.bar(
     summary,
     x="Platform",
     y="Positive %",
-    title="Positive Sentiment Comparison",
+    title="😊 Positive Sentiment Comparison",
     text_auto=True
 )
 
@@ -131,7 +209,10 @@ st.plotly_chart(
     use_container_width=True
 )
 
-# PIE CHART
+# -----------------------------------
+# OVERALL SENTIMENT PIE
+# -----------------------------------
+
 sentiment_counts = (
     final_df["sentiment"]
     .value_counts()
@@ -147,85 +228,18 @@ fig_pie = px.pie(
     sentiment_counts,
     names="Sentiment",
     values="Count",
-    title="Overall Sentiment Distribution"
+    title="📊 Overall Sentiment Distribution"
 )
 
 st.plotly_chart(
     fig_pie,
     use_container_width=True
 )
-# AI INSIGHTS
-st.subheader("🧠 AI Executive Insights")
 
-try:
-
-    # BEST RATING
-    best_rating = summary.loc[
-        summary["Avg Rating"].idxmax()
-    ]
-
-    # BEST SENTIMENT
-    best_sentiment = summary.loc[
-        summary["Positive %"].idxmax()
-    ]
-
-    # ISSUE ANALYSIS SAFE CHECK
-    if not issue_counts.empty:
-
-        top_issue = issue_counts.iloc[0]
-
-        issue_text = (
-            f"{top_issue['Issue Type']} "
-            f"({top_issue['Count']} mentions)"
-        )
-
-    else:
-
-        issue_text = "No major complaint patterns detected."
-
-    # DISPLAY INSIGHTS
-    st.info(
-        f'''
-📈 {best_rating["Platform"]} has the highest average rating of {round(best_rating["Avg Rating"],2)}.
-
-😊 {best_sentiment["Platform"]} shows the strongest positive sentiment at {best_sentiment["Positive %"]}%.
-
-🚨 Most common complaint category:
-{issue_text}
-
-💡 Platforms with stronger UX and stability are generating significantly higher customer satisfaction.
-'''
-    )
-
-except Exception as e:
-
-    st.error(f"Insight Engine Error: {e}")
-# BEST RATING
-best_rating = summary.loc[
-    summary["Avg Rating"].idxmax()
-]
-
-# BEST SENTIMENT
-best_sentiment = summary.loc[
-    summary["Positive %"].idxmax()
-]
-
-# MOST COMPLAINTS
-top_issue = issue_counts.iloc[0]
-
-st.info(
-    f"""
-    📈 {best_rating['Platform']} has the highest average rating of {round(best_rating['Avg Rating'],2)}.
-
-    😊 {best_sentiment['Platform']} shows the strongest positive sentiment at {best_sentiment['Positive %']}%.
-
-    🚨 Most common complaint category across platforms:
-    {top_issue['Issue Type']} ({top_issue['Count']} mentions).
-
-    💡 Platforms with stronger UX and stability are generating significantly higher user satisfaction.
-    """
-)
+# -----------------------------------
 # ISSUE ANALYSIS
+# -----------------------------------
+
 st.subheader("🚨 Complaint Intelligence")
 
 issue_counts = (
@@ -243,7 +257,7 @@ fig_issue = px.bar(
     issue_counts,
     x="Issue Type",
     y="Count",
-    title="Most Common Complaints",
+    title="🚨 Most Common Complaint Categories",
     text_auto=True
 )
 
@@ -252,7 +266,91 @@ st.plotly_chart(
     use_container_width=True
 )
 
-# REVIEW DATA
+# -----------------------------------
+# WORD CLOUD
+# -----------------------------------
+
+st.subheader("☁️ Review Word Cloud")
+
+text = " ".join(
+    final_df["review"]
+    .astype(str)
+)
+
+wordcloud = WordCloud(
+    width=1000,
+    height=500,
+    background_color="black"
+).generate(text)
+
+fig, ax = plt.subplots(figsize=(12, 6))
+
+ax.imshow(wordcloud)
+
+ax.axis("off")
+
+st.pyplot(fig)
+
+# -----------------------------------
+# AI EXECUTIVE INSIGHTS
+# -----------------------------------
+
+st.subheader("🧠 AI Executive Insights")
+
+try:
+
+    # Highest Rated
+    best_rating = summary.loc[
+        summary["Avg Rating"].idxmax()
+    ]
+
+    # Highest Sentiment
+    best_sentiment = summary.loc[
+        summary["Positive %"].idxmax()
+    ]
+
+    # Top Complaint
+    if not issue_counts.empty:
+
+        top_issue = issue_counts.iloc[0]
+
+        issue_text = (
+            f"{top_issue['Issue Type']} "
+            f"({top_issue['Count']} mentions)"
+        )
+
+    else:
+
+        issue_text = (
+            "No major complaint patterns detected."
+        )
+
+    st.info(
+        f"""
+📈 {best_rating['Platform']} has the highest average rating of {round(best_rating['Avg Rating'],2)}.
+
+😊 {best_sentiment['Platform']} shows the strongest positive sentiment at {best_sentiment['Positive %']}%.
+
+🚨 Most common complaint category:
+{issue_text}
+
+💡 Platforms with stronger UX, stability, and onboarding experience are generating significantly higher customer satisfaction.
+
+🏆 The market is shifting toward AI-powered, mobile-first, engagement-driven fintech ecosystems.
+"""
+    )
+
+except Exception as e:
+
+    st.error(f"Insight Engine Error: {e}")
+
+# -----------------------------------
+# REVIEW DATASET
+# -----------------------------------
+
 st.subheader("📋 Live Review Dataset")
 
-st.dataframe(final_df)
+st.dataframe(
+    final_df,
+    use_container_width=True
+)
