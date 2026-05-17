@@ -42,16 +42,16 @@ for app_name in selected:
         df["Platform"] = app_name
 
         df["sentiment"] = (
-    df["review"]
-    .astype(str)
-    .apply(analyze_sentiment)
-)
+            df["review"]
+            .astype(str)
+            .apply(analyze_sentiment)
+        )
 
-df["issue_type"] = (
-    df["review"]
-    .astype(str)
-    .apply(detect_issue)
-)
+        df["issue_type"] = (
+            df["review"]
+            .astype(str)
+            .apply(detect_issue)
+        )
 
         all_data.append(df)
 
