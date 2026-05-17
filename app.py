@@ -157,6 +157,49 @@ st.plotly_chart(
 # AI INSIGHTS
 st.subheader("🧠 AI Executive Insights")
 
+try:
+
+    # BEST RATING
+    best_rating = summary.loc[
+        summary["Avg Rating"].idxmax()
+    ]
+
+    # BEST SENTIMENT
+    best_sentiment = summary.loc[
+        summary["Positive %"].idxmax()
+    ]
+
+    # ISSUE ANALYSIS SAFE CHECK
+    if not issue_counts.empty:
+
+        top_issue = issue_counts.iloc[0]
+
+        issue_text = (
+            f"{top_issue['Issue Type']} "
+            f"({top_issue['Count']} mentions)"
+        )
+
+    else:
+
+        issue_text = "No major complaint patterns detected."
+
+    # DISPLAY INSIGHTS
+    st.info(
+        f'''
+📈 {best_rating["Platform"]} has the highest average rating of {round(best_rating["Avg Rating"],2)}.
+
+😊 {best_sentiment["Platform"]} shows the strongest positive sentiment at {best_sentiment["Positive %"]}%.
+
+🚨 Most common complaint category:
+{issue_text}
+
+💡 Platforms with stronger UX and stability are generating significantly higher customer satisfaction.
+'''
+    )
+
+except Exception as e:
+
+    st.error(f"Insight Engine Error: {e}")
 # BEST RATING
 best_rating = summary.loc[
     summary["Avg Rating"].idxmax()
