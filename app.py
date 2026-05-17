@@ -233,6 +233,34 @@ st.dataframe(
     summary,
     use_container_width=True
 )
+# ---------------------------------------------------
+# OVERALL PLATFORM LEADERBOARD
+# ---------------------------------------------------
+
+st.subheader("🏆 Overall Platform Ranking")
+
+fig_overall = px.bar(
+
+    summary,
+
+    x="Platform",
+
+    y="Overall Score",
+
+    color="Overall Score",
+
+    text_auto=True,
+
+    title="Overall WealthTech Platform Score"
+
+)
+
+st.plotly_chart(
+
+    fig_overall,
+
+    use_container_width=True
+)
 
 # ---------------------------------------------------
 # RATING COMPARISON
