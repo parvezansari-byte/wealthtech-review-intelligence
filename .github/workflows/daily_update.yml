@@ -1,0 +1,43 @@
+name: Daily Review Update
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+
+  workflow_dispatch:
+
+jobs:
+  update-reviews:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Up Python
+        uses: actions/setup-python@v5
+
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run Review Scraper
+        run: |
+          python update_reviews.py
+
+      - name: Commit Updated Data
+        run: |
+          git config --global user.name "github-actions"
+
+          git config --global user.email "actions@github.com"
+
+          git add .
+
+          git commit -m "Daily review update" || echo "No changes"
+
+          git push
