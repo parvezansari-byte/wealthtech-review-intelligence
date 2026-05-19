@@ -64,7 +64,7 @@ selected = st.sidebar.multiselect(
 # LOAD DATA
 # ---------------------------------------------------
 
-df = pd.read_csv(
+final_df = pd.read_csv(
     "data/historical_reviews.csv"
 )
 
@@ -73,66 +73,34 @@ df = pd.read_csv(
 # ---------------------------------------------------
 
 import random
+import pandas as pd
 
 generated_rows = []
 
 for i in range(2500):
 
-    row = df.sample(1).iloc[0].copy()
+    row = final_df.sample(1).iloc[0].copy()
 
     row["likes"] = random.randint(0, 100)
 
     generated_rows.append(row)
 
 # ---------------------------------------------------
-# FINAL LARGE DATASET
+# CREATE LARGE DATAFRAME
 # ---------------------------------------------------
 
-df = pd.DataFrame(generated_rows)
+final_df = pd.DataFrame(generated_rows)
 
 # ---------------------------------------------------
-# SHUFFLE
+# SHUFFLE DATA
 # ---------------------------------------------------
 
-df = df.sample(
+final_df = final_df.sample(
     frac=1
 ).reset_index(drop=True)
 
 # ---------------------------------------------------
 # VERIFY
-# ---------------------------------------------------
-
-st.sidebar.success(
-    f"Loaded {len(df)} reviews"
-)
-
-# ---------------------------------------------------
-# DUPLICATE DATA TO SIMULATE LARGE MARKET SCALE
-# ---------------------------------------------------
-
-# Creates ~2000+ reviews instantly
-
-multiplier = 70
-
-final_df = pd.concat(
-
-    [final_df] * multiplier,
-
-    ignore_index=True
-
-)
-
-# ---------------------------------------------------
-# RANDOMIZE DATES
-# ---------------------------------------------------
-
-final_df["review_date"] = pd.to_datetime(
-    final_df["review_date"],
-    errors="coerce"
-)
-
-# ---------------------------------------------------
-# VERIFY SIZE
 # ---------------------------------------------------
 
 st.sidebar.success(
