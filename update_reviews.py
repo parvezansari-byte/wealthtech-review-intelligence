@@ -4,16 +4,16 @@ from datetime import datetime
 import os
 
 # ---------------------------------------------------
-# APPS
+# PLAY STORE APPS
 # ---------------------------------------------------
 
 apps = {
 
-    "Prudent":
-        "com.prumob.mobileapp",
-
     "NJ Partner Desk":
         "com.fin.mpartnerdesk",
+
+    "Prudent":
+        "com.prumob.mobileapp",
 
     "AssetPlus":
         "in.assetplus.partner",
@@ -44,12 +44,12 @@ apps = {
 all_reviews = []
 
 # ---------------------------------------------------
-# FETCH REVIEWS
+# FETCH PLAY STORE REVIEWS
 # ---------------------------------------------------
 
 for app_name, app_id in apps.items():
 
-    print(f"Fetching {app_name}")
+    print(f"Fetching reviews for {app_name}")
 
     try:
 
@@ -61,7 +61,7 @@ for app_name, app_id in apps.items():
 
             country="in",
 
-            count=200
+            count=300
 
         )
 
@@ -71,6 +71,8 @@ for app_name, app_id in apps.items():
 
                 "platform":
                     app_name,
+
+                # REAL PLAYSTORE REVIEWER NAME
 
                 "reviewer_name":
                     r.get("userName", "Anonymous"),
@@ -94,7 +96,9 @@ for app_name, app_id in apps.items():
 
     except Exception as e:
 
-        print(f"Error: {e}")
+        print(
+            f"Error scraping {app_name}: {e}"
+        )
 
 # ---------------------------------------------------
 # CREATE DATAFRAME
@@ -103,7 +107,7 @@ for app_name, app_id in apps.items():
 df = pd.DataFrame(all_reviews)
 
 # ---------------------------------------------------
-# CREATE FOLDER
+# CREATE DATA FOLDER
 # ---------------------------------------------------
 
 os.makedirs(
@@ -116,16 +120,17 @@ os.makedirs(
 # ---------------------------------------------------
 
 df.to_csv(
+
     "data/historical_reviews.csv",
+
     index=False
+
 )
 
 # ---------------------------------------------------
 # SUCCESS
 # ---------------------------------------------------
 
-print(df.head())
-
 print(
-    f"Total Reviews Saved: {len(df)}"
+    f"Saved {len(df)} real Play Store reviews."
 )
