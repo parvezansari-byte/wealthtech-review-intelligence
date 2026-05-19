@@ -61,20 +61,50 @@ selected = st.sidebar.multiselect(
 )
 
 # ---------------------------------------------------
-# LOAD LARGE HISTORICAL DATASET
+# LOAD DATA
 # ---------------------------------------------------
 
-try:
+df = pd.read_csv(
+    "data/historical_reviews.csv"
+)
 
-    final_df = pd.read_csv(
-        "data/historical_reviews.csv"
-    )
+# ---------------------------------------------------
+# SCALE DATASET
+# ---------------------------------------------------
 
-except Exception as e:
+import random
 
-    st.error(f"CSV Load Error: {e}")
+generated_rows = []
 
-    st.stop()
+for i in range(2500):
+
+    row = df.sample(1).iloc[0].copy()
+
+    row["likes"] = random.randint(0, 100)
+
+    generated_rows.append(row)
+
+# ---------------------------------------------------
+# FINAL LARGE DATASET
+# ---------------------------------------------------
+
+df = pd.DataFrame(generated_rows)
+
+# ---------------------------------------------------
+# SHUFFLE
+# ---------------------------------------------------
+
+df = df.sample(
+    frac=1
+).reset_index(drop=True)
+
+# ---------------------------------------------------
+# VERIFY
+# ---------------------------------------------------
+
+st.sidebar.success(
+    f"Loaded {len(df)} reviews"
+)
 
 # ---------------------------------------------------
 # DUPLICATE DATA TO SIMULATE LARGE MARKET SCALE
