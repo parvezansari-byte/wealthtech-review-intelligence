@@ -60,13 +60,17 @@ selected = st.sidebar.multiselect(
     default=list(apps.keys())
 )
 
-# ---------------------------------------------------
-# LOAD DATA
-# ---------------------------------------------------
+# ==================================================
+# LOAD DATA (CACHED)
+# ==================================================
 
-final_df = pd.read_csv(
-    "data/historical_reviews.csv"
-)
+@st.cache_data
+def load_reviews():
+    return pd.read_csv(
+        "data/historical_reviews.csv"
+    )
+
+final_df = load_reviews()
 
 # ---------------------------------------------------
 # SCALE DATASET
